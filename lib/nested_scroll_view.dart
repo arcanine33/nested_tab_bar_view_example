@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nested_scroll_views/material.dart';
 
 import 'tab_bar_view_1.dart';
 import 'tab_bar_view_2.dart';
@@ -39,7 +40,7 @@ class _NestedScrollViewScreenState extends State<NestedScrollViewScreen>  with T
               ],
             ),
             Expanded(
-              child: TabBarView(
+              child: NestedTabBarView(
                 controller: _tabController,
                 children: [
                   TabBarView1(),
