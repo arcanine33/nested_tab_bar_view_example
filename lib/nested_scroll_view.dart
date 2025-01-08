@@ -13,7 +13,8 @@ class NestedScrollViewScreen extends StatefulWidget {
   State<NestedScrollViewScreen> createState() => _NestedScrollViewScreenState();
 }
 
-class _NestedScrollViewScreenState extends State<NestedScrollViewScreen>  with TickerProviderStateMixin{
+class _NestedScrollViewScreenState extends State<NestedScrollViewScreen>
+    with TickerProviderStateMixin {
   late TabController _tabController;
 
   @override
