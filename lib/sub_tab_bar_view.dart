@@ -1,14 +1,22 @@
 import 'package:flutter/material.dart';
 
-class SubTabBarView1 extends StatelessWidget {
-  const SubTabBarView1({super.key});
+class SubTabBarView extends StatefulWidget {
+  final int index;
+  const SubTabBarView({required this.index, super.key});
+
+  @override
+  State<SubTabBarView> createState() => _SubTabBarViewState();
+}
+
+class _SubTabBarViewState extends State<SubTabBarView>  {
 
   @override
   Widget build(BuildContext context) {
     return Builder(
       builder: (context) {
         return CustomScrollView(
-          physics: const NoImplicitScrollPhysics(),
+          key: PageStorageKey<int>(widget.index),
+          controller: ScrollController(),
           slivers: [
             SliverPadding(
               padding: const EdgeInsets.only(
@@ -25,7 +33,7 @@ class SubTabBarView1 extends StatelessWidget {
                 ),
                 itemBuilder: (context, index) {
                   return ListTile(
-                    title: Text('subTab one page $index'),
+                    title: Text('subTab ${widget.index + 1} page $index'),
                   );
                 },
               ),
