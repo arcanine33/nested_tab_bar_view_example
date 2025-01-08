@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:nested_tab_bar_view/sub_tab_bar_view_1.dart';
+import 'package:nested_tab_bar_view/sub_tab_bar_view.dart';
+import 'package:extended_nested_scroll_view/extended_nested_scroll_view.dart';
 
 class TabBarView2 extends StatefulWidget {
   const TabBarView2({super.key});
@@ -9,7 +10,7 @@ class TabBarView2 extends StatefulWidget {
   State<TabBarView2> createState() => _TabBarView2State();
 }
 
-class _TabBarView2State extends State<TabBarView2>  with TickerProviderStateMixin {
+class _TabBarView2State extends State<TabBarView2> with TickerProviderStateMixin {
   late final TabController _tabController;
   double appBarHeight = 50;
 
@@ -28,56 +29,33 @@ class _TabBarView2State extends State<TabBarView2>  with TickerProviderStateMixi
 
   @override
   Widget build(BuildContext context) {
-    return NestedScrollView(
-      headerSliverBuilder: (context, innerBoxIsScrolled) {
-        return [
-          SliverAppBar(
-            toolbarHeight: 0, // between major tab space 0
-            bottom: PreferredSize(
-              preferredSize: Size.fromHeight(appBarHeight), // optional
-              child: TabBar(
-                controller: _tabController,
-                tabs: [
-                  Tab(icon: Icon(Icons.one_k),),
-                  Tab(icon: Icon(Icons.two_k),),
-                  Tab(icon: Icon(Icons.three_k),),
-                  Tab(icon: Icon(Icons.four_k),),
-                  Tab(icon: Icon(Icons.five_k),),
-                ],
+    return NotificationListener<UserScrollNotification>(
+      onNotification: _showSubTabBar,
+      child: ExtendedNestedScrollView(
+        headerSliverBuilder: (context, innerBoxIsScrolled) {
+          return [
+            SliverAppBar(
+              toolbarHeight: 0, // between major tab space 0
+              bottom: PreferredSize(
+                preferredSize: Size.fromHeight(appBarHeight), // optional
+                child: TabBar(
+                  controller: _tabController,
+                  tabs: [
+                    Tab(icon: Icon(Icons.one_k),),
+                    Tab(icon: Icon(Icons.two_k),),
+                    Tab(icon: Icon(Icons.three_k),),
+                    Tab(icon: Icon(Icons.four_k),),
+                    Tab(icon: Icon(Icons.five_k),),
+                  ],
+                ),
               ),
             ),
-          ),
-        ];
-      },
-      body: TabBarView(
-        controller: _tabController,
-        children: [
-          SubTabBarView1(),
-          ListView.builder(
-            itemBuilder: (context, index) => ListTile(
-              title: Text('subTab two page $index'),
-            ),
-            itemCount: 100,
-          ),
-          ListView.builder(
-            itemBuilder: (context, index) => ListTile(
-              title: Text('subTab three page $index'),
-            ),
-            itemCount: 100,
-          ),
-          ListView.builder(
-            itemBuilder: (context, index) => ListTile(
-              title: Text('subTab four page $index'),
-            ),
-            itemCount: 100,
-          ),
-          ListView.builder(
-            itemBuilder: (context, index) => ListTile(
-              title: Text('subTab five page $index'),
-            ),
-            itemCount: 100,
-          ),
-        ],
+          ];
+        },
+        body: TabBarView(
+          controller: _tabController,
+          children: List.generate(5, (index) => SubTabBarView(index: index)),
+        ),
       ),
     );
   }
