@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 class SubTabBarView extends StatefulWidget {
@@ -8,15 +10,31 @@ class SubTabBarView extends StatefulWidget {
   State<SubTabBarView> createState() => _SubTabBarViewState();
 }
 
-class _SubTabBarViewState extends State<SubTabBarView>  {
+class _SubTabBarViewState extends State<SubTabBarView> with AutomaticKeepAliveClientMixin {
+
+  late ScrollController scrollController;
+
+  Timer? _throttle;
+  int throttleMilliseconds = 300;
+  int itemCount = 50;
+
+  @override
+  void initState() {
+    scrollController = ScrollController();
+    scrollController.addListener(_onScroll);
+
+    print('sub tab initState: ${widget.index + 1}');
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Builder(
       builder: (context) {
         return CustomScrollView(
           key: PageStorageKey<int>(widget.index),
-          controller: ScrollController(),
+          controller: scrollController,
           slivers: [
             SliverPadding(
               padding: const EdgeInsets.only(
@@ -24,7 +42,7 @@ class _SubTabBarViewState extends State<SubTabBarView>  {
                 right: 16,
               ),
               sliver: SliverGrid.builder(
-                itemCount: 100,
+                itemCount: itemCount,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 3,
                   mainAxisSpacing: 24,
@@ -43,6 +61,21 @@ class _SubTabBarViewState extends State<SubTabBarView>  {
       }
     );
   }
+
+  void _onScroll() {
+    _throttle ??= Timer(Duration(milliseconds: throttleMilliseconds), () {
+      _throttle = null;
+      if (scrollController.position.extentAfter <= 300) {
+        setState(() {
+          itemCount += 50;
+          print('load more');
+        });
+      }
+    });
+  }
+
+  @override
+  bool get wantKeepAlive => true;
 }
 
 class NoImplicitScrollPhysics extends AlwaysScrollableScrollPhysics {
